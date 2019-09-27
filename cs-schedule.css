@@ -1,0 +1,13 @@
+.schedule {
+  font-family: Roboto, 黑體-繁, 微軟正黑體, sans-serif;
+  table-layout: fixed;
+  text-align: center;
+}
+
+.schedule th {
+  border-bottom: 1px #fff solid;
+}
+
+.schedule th, .schedule td {
+  font-size: 1rem;
+}

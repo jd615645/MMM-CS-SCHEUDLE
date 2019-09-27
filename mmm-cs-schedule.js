@@ -1,0 +1,97 @@
+Module.register("mmm-cs-schedule",{
+	// Default module config.
+	defaults: {
+	},
+
+	// Define required scripts.
+	getStyles() {
+		return ["cs-schedule.css"];
+	},
+
+	async getDom() {
+		let head = this.getScheduleHeader();
+		let body = await this.getScheduleBody();
+
+		let wrapper = document.createElement("table");
+		wrapper.className = "schedule";
+
+		let thead = document.createElement("thead");
+		let tbody = document.createElement("tbody");
+
+		let theadRow = document.createElement("tr");
+		head.forEach(day => {
+			let dateCell = document.createElement("th");
+
+			dateCell.innerHTML = day;
+			theadRow.appendChild(dateCell);
+		});
+		thead.appendChild(theadRow);
+
+		body.forEach((row) => {
+			let dateRow = document.createElement("tr");
+			let mon = row["mon"] === null ? "X" : row["mon"];
+			let tue = row["tue"] === null ? "X" : row["tue"];
+			let wed = row["wed"] === null ? "X" : row["wed"];
+			let thu = row["thu"] === null ? "X" : row["thu"];
+			let fri = row["fri"] === null ? "X" : row["fri"];
+			let sat = row["sat"] === null ? "X" : row["sat"];
+			let sun = row["sun"] === null ? "X" : row["sun"];
+
+			dateRow.innerHTML = `
+				<td>${row["begin_time"]}-${row["end_time"]}</td>
+				<td>${mon}</td>
+				<td>${tue}</td>
+				<td>${wed}</td>
+				<td>${thu}</td>
+				<td>${fri}</td>
+				<td>${sat}</td>
+				<td>${sun}</td>
+			`;
+
+			tbody.appendChild(dateRow);
+		})
+
+		wrapper.appendChild(thead);
+		wrapper.appendChild(tbody);
+
+		return wrapper;
+	},
+
+	getScheduleHeader() {
+		let today = new Date().toISOString().slice(0, 10);
+		let week = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
+		let days = ["一", "二", "三", "四", "五", "六", "日"];
+
+		let header = ["時間"];
+
+		days.forEach((day, key) => {
+			let date = this.getMonday(new Date(today)).toISOString(key).slice(0, 10);
+			let weekText = `${date} (${day})`;
+
+			header.push(weekText);
+		});
+
+		return header;
+	},
+
+	async getScheduleBody() {
+		let today = new Date().toISOString().slice(0, 10);
+		let schedule_api = `https://cscc.cs.nctu.edu.tw/schedule_api/${today}`;
+		let url = `https://jsonp.afeld.me/?url=${encodeURIComponent(schedule_api)}`;
+
+		let fetchSchedule =
+			await fetch(url)
+				.then((res) => {
+					return res.json();
+				});
+
+		return fetchSchedule;
+	},
+
+	getMonday(d) {
+		d = new Date(d);
+		let day = d.getDay()
+		let	diff = d.getDate() - day + (day == 0 ? -6 : 1); // adjust when day is sunday
+		return new Date(d.setDate(diff));
+	},
+});
