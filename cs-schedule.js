@@ -1,4 +1,4 @@
-Module.register("mmm-cs-schedule",{
+Module.register("cs-schedule",{
 	// Default module config.
 	defaults: {
 	},
@@ -29,13 +29,13 @@ Module.register("mmm-cs-schedule",{
 
 		body.forEach((row) => {
 			let dateRow = document.createElement("tr");
-			let mon = row["mon"] === null ? "X" : row["mon"];
-			let tue = row["tue"] === null ? "X" : row["tue"];
-			let wed = row["wed"] === null ? "X" : row["wed"];
-			let thu = row["thu"] === null ? "X" : row["thu"];
-			let fri = row["fri"] === null ? "X" : row["fri"];
-			let sat = row["sat"] === null ? "X" : row["sat"];
-			let sun = row["sun"] === null ? "X" : row["sun"];
+			let mon = row["mon"] === null ? "X" : row["mon"].replace(",", "<br>");
+			let tue = row["tue"] === null ? "X" : row["tue"].replace(",", "<br>");
+			let wed = row["wed"] === null ? "X" : row["wed"].replace(",", "<br>");
+			let thu = row["thu"] === null ? "X" : row["thu"].replace(",", "<br>");
+			let fri = row["fri"] === null ? "X" : row["fri"].replace(",", "<br>");
+			let sat = row["sat"] === null ? "X" : row["sat"].replace(",", "<br>");
+			let sun = row["sun"] === null ? "X" : row["sun"].replace(",", "<br>");
 
 			dateRow.innerHTML = `
 				<td>${row["begin_time"]}-${row["end_time"]}</td>
@@ -66,7 +66,7 @@ Module.register("mmm-cs-schedule",{
 
 		days.forEach((day, key) => {
 			let date = this.getMonday(new Date(today)).toISOString(key).slice(0, 10);
-			let weekText = `${date} (${day})`;
+			let weekText = `${date}<br>(${day})`;
 
 			header.push(weekText);
 		});
