@@ -1,3 +1,8 @@
+Date.prototype.addDays = function (days) {
+	this.setDate(this.getDate() + days);
+	return this;
+}
+
 Module.register("cs-schedule",{
 	// Default module config.
 	defaults: {
@@ -74,7 +79,7 @@ Module.register("cs-schedule",{
 		let header = ["時間"];
 
 		days.forEach((day, key) => {
-			let date = this.getMonday(new Date(today)).toISOString(key).slice(0, 10);
+			let date = this.getMonday(new Date(today)).addDays(key).toISOString().slice(0, 10);
 			let weekText = `${date}<br>(${day})`;
 
 			header.push(weekText);
