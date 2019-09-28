@@ -1,11 +1,20 @@
 Module.register("cs-schedule",{
 	// Default module config.
 	defaults: {
+		updateSchedule: 1000 * 60 * 60,
 	},
 
 	// Define required scripts.
 	getStyles() {
 		return ["cs-schedule.css"];
+	},
+
+	start() {
+		let self = this;
+		setInterval(function () {
+			console.log(self.config.updateSchedule);
+			self.updateDom(); // no speed defined, so it updates instantly.
+		}, self.config.updateSchedule); //perform every 1 hour.
 	},
 
 	async getDom() {
